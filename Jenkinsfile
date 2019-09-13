@@ -29,12 +29,14 @@ pipeline {
         }
         stage('deploy') {
             steps {
+                script {
                 try {
                       sh "docker service update spring-petclinic --image ${env.IMAGE_NAME}"
                     }
                     catch ( e ) {
                       sh "docker service create --with-registry-auth --replicas 1 --name spring-petclinic --constraint 'node.role != manager' --publish 8080:8080 ${env.IMAGE_NAME}"
                     }
+                }
             }
         }
     }
